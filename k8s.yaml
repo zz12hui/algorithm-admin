@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: algorithm-admin
+  labels:
+    app: algorithm-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: algorithm-admin
+  template:
+    metadata:
+      labels:
+        app: algorithm-admin
+    spec:
+      containers:
+        - name: algorithm-admin
+          image: algorithm-admin:latest
+          ports:
+            - containerPort: 80
+          # 如需持久化连接配置，取消下面注释
+          # volumeMounts:
+          #   - name: config
+          #     mountPath: /var/www/html/config
+      # volumes:
+      #   - name: config
+      #     persistentVolumeClaim:
+      #       claimName: algorithm-admin-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: algorithm-admin
+spec:
+  selector:
+    app: algorithm-admin
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
